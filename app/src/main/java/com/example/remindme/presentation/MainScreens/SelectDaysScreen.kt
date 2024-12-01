@@ -3,6 +3,7 @@ package com.example.remindme.presentation.MainScreens
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,12 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.remindme.presentation.theme.RemindMeTheme
-import com.example.remindme.presentation.theme.ButtonLight
-import com.example.remindme.presentation.theme.ButtonDark
-import com.example.remindme.presentation.theme.BackgroundLight
-import com.example.remindme.presentation.theme.BackgroundDark
-import com.example.remindme.presentation.theme.TextLight
-import com.example.remindme.presentation.theme.TextDark
+import com.example.remindme.presentation.theme.*
 
 class DaysSelectionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,8 +42,14 @@ class DaysSelectionActivity : ComponentActivity() {
 fun SelectDaysScreen(navController: NavController, context: Context) {
     val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-    val savedDays = sharedPreferences.getStringSet("selected_days", setOf()) ?: setOf()
-    val selectedDays = remember { mutableStateListOf<String>().apply { addAll(savedDays) } }
+
+    // Initialize with "Mon" if empty
+    val initialDays = sharedPreferences.getStringSet("selected_days", null) ?: setOf("Mon")
+    if (sharedPreferences.getStringSet("selected_days", null) == null) {
+        sharedPreferences.edit().putStringSet("selected_days", initialDays).apply()
+    }
+
+    val selectedDays = remember { mutableStateListOf<String>().apply { addAll(initialDays) } }
     var isEditing by remember { mutableStateOf(false) }
 
     Column(
@@ -93,9 +95,16 @@ fun SelectDaysScreen(navController: NavController, context: Context) {
             Button(
                 onClick = {
                     if (isEditing) {
-                        // Save the updated days to shared preferences
+                        // Save the updated days to SharedPreferences
+                        sharedPreferences.edit().clear().apply() // Clear existing days
                         sharedPreferences.edit().putStringSet("selected_days", selectedDays.toSet()).apply()
+
+                        // Print log and toast message
+                        Log.d("SharedPreferences", "Saved days: ${selectedDays.joinToString(", ")}")
                         Toast.makeText(context, "Saved days: ${selectedDays.joinToString(", ")}", Toast.LENGTH_SHORT).show()
+                        navController.navigate("home_screen") {
+                            popUpTo("frequency_picking_screen") { inclusive = true }
+                        }
                     }
                     isEditing = !isEditing
                 },
@@ -131,11 +140,11 @@ fun DayBox(day: String, isSelected: Boolean, isEditing: Boolean, onClick: () -> 
     }
 }
 
-
-@Preview(device = Devices.PHONE, showSystemUi = true)
+@Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
-fun SelectDaysScreenPreview() {
+fun SelectDaysScreenWearOSPreview() {
     RemindMeTheme {
         SelectDaysScreen(navController = rememberNavController(), context = LocalContext.current)
     }
 }
+

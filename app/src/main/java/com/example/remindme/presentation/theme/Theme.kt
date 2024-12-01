@@ -21,13 +21,14 @@ val TextDark = Color.White // White text for dark theme
 private val LightColorPalette = Colors(
     primary = ButtonLight,
     primaryVariant = ButtonLight,
-    secondary = ButtonLight,
+    secondary = ButtonDark,
     onPrimary = TextLight, // Text color for buttons
     onSecondary = TextLight, // Text color for buttons
     surface = BackgroundLight,
     onSurface = TextLight,
     background = BackgroundLight,
     onBackground = TextLight
+
 )
 
 private val DarkColorPalette = Colors(

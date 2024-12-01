@@ -1,5 +1,7 @@
 package com.example.remindme.presentation
 
+import SelectEndTimeScreen
+import SelectStartTimeScreen
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,13 +13,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.remindme.presentation.MainScreens.DetailScreen
+import com.example.remindme.presentation.MainScreens.FrequencyPickingScreen
 import com.example.remindme.presentation.MainScreens.HomeScreen
 import com.example.remindme.presentation.MainScreens.SelectDaysScreen
-import com.example.remindme.presentation.MainScreens.SelectEndTimeScreen
+//import com.example.remindme.presentation.MainScreens.SelectEndTimeScreen
 //import com.example.remindme.presentation.MainScreens.SelectStartTimeScreen
 import com.example.remindme.presentation.theme.RemindMeTheme
 //import com.example.remindme.presentation.MainScreens.SelectStartTimeScreen
-import com.example.remindme.presentation.theme.screens.SelectStartTimeScreen
 
 //import com.example.remindme.presentation.theme.screens.SelectStartTimeScreen
 
@@ -53,13 +56,13 @@ fun AppNavigation() {
             SelectStartTimeScreen(navController = navController)
         }
         composable("select_end_time") {
-         SelectEndTimeScreen(navController = navController)
+            SelectEndTimeScreen(navController = navController)
         }
         composable("select_frequency") {
-//            SelectFrequencyScreen()
+            FrequencyPickingScreen(navController= navController)
         }
         composable("show_details") {
-//            ShowDetailsScreen()
+            DetailScreen(navController= navController)
         }
         composable("set_reminder") {
 //            SetReminderScreen()
