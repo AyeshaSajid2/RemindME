@@ -3,9 +3,11 @@ package com.example.remindme.presentation
 import SelectEndTimeScreen
 import SelectStartTimeScreen
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -17,16 +19,23 @@ import com.example.remindme.presentation.MainScreens.DetailScreen
 import com.example.remindme.presentation.MainScreens.FrequencyPickingScreen
 import com.example.remindme.presentation.MainScreens.HomeScreen
 import com.example.remindme.presentation.MainScreens.SelectDaysScreen
+import com.example.remindme.presentation.Remainder.createNotificationChannel
 //import com.example.remindme.presentation.MainScreens.SelectEndTimeScreen
 //import com.example.remindme.presentation.MainScreens.SelectStartTimeScreen
 import com.example.remindme.presentation.theme.RemindMeTheme
+import com.example.remindme.presentation.utils.PermissionUtils
+
 //import com.example.remindme.presentation.MainScreens.SelectStartTimeScreen
 
 //import com.example.remindme.presentation.theme.screens.SelectStartTimeScreen
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createNotificationChannel(this)
+        PermissionUtils.requestNotificationPermission(this)
+
         setContent {
             RemindMeTheme {
                 AppNavigation()
@@ -35,6 +44,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()

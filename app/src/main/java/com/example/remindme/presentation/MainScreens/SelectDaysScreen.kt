@@ -40,15 +40,11 @@ class DaysSelectionActivity : ComponentActivity() {
 
 @Composable
 fun SelectDaysScreen(navController: NavController, context: Context) {
-    val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+    val daysOfWeek = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
 
-    // Initialize with "Mon" if empty
-    val initialDays = sharedPreferences.getStringSet("selected_days", null) ?: setOf("Mon")
-    if (sharedPreferences.getStringSet("selected_days", null) == null) {
-        sharedPreferences.edit().putStringSet("selected_days", initialDays).apply()
-    }
-
+    // Initialize with "Monday" if empty
+    val initialDays = sharedPreferences.getStringSet("selected_days", setOf("Monday"))!!
     val selectedDays = remember { mutableStateListOf<String>().apply { addAll(initialDays) } }
     var isEditing by remember { mutableStateOf(false) }
 
@@ -79,6 +75,8 @@ fun SelectDaysScreen(navController: NavController, context: Context) {
                             } else {
                                 selectedDays.add(day)
                             }
+                        } else {
+                            Toast.makeText(context, "Enable edit mode to select days", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -95,13 +93,17 @@ fun SelectDaysScreen(navController: NavController, context: Context) {
             Button(
                 onClick = {
                     if (isEditing) {
-                        // Save the updated days to SharedPreferences
-                        sharedPreferences.edit().clear().apply() // Clear existing days
-                        sharedPreferences.edit().putStringSet("selected_days", selectedDays.toSet()).apply()
+                        // Clear and update shared preferences
+                        sharedPreferences.edit()
+                            .clear()
+                            .putStringSet("selected_days", selectedDays.toSet())
+                            .apply()
 
-                        // Print log and toast message
+                        // Log and UI feedback
                         Log.d("SharedPreferences", "Saved days: ${selectedDays.joinToString(", ")}")
-                        Toast.makeText(context, "Saved days: ${selectedDays.joinToString(", ")}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Saved days successfully!", Toast.LENGTH_SHORT).show()
+
+                        // Navigate back
                         navController.navigate("home_screen") {
                             popUpTo("frequency_picking_screen") { inclusive = true }
                         }
@@ -125,9 +127,9 @@ fun DayBox(day: String, isSelected: Boolean, isEditing: Boolean, onClick: () -> 
     val selectedColor = Color(0xFFACECA1)
     Surface(
         modifier = Modifier
-            .size(70.dp)
-            .padding(8.dp)
-            .clickable(enabled = isEditing, onClick = onClick),
+            .size(80.dp) // Increased size for better readability
+            .padding(3.dp)
+            .clickable(enabled = true, onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         color = if (isSelected) selectedColor else Color.LightGray
     ) {
@@ -135,7 +137,11 @@ fun DayBox(day: String, isSelected: Boolean, isEditing: Boolean, onClick: () -> 
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = day, color = Color.White)
+            Text(
+                text = day,
+                color = if (isSelected) Color.Black else Color.White,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }
@@ -147,4 +153,3 @@ fun SelectDaysScreenWearOSPreview() {
         SelectDaysScreen(navController = rememberNavController(), context = LocalContext.current)
     }
 }
-
