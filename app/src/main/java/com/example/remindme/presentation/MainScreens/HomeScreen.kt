@@ -126,6 +126,7 @@ fun HomeScreen(navController: NavHostController) {
     }
 }
 
+
 fun setReminders(sharedPreferences: SharedPreferences, context: Context) {
     val selectedDays = sharedPreferences.getStringSet("selected_days", emptySet()) ?: emptySet()
     val startTimeString = sharedPreferences.getString("start_time", "08:00 AM") ?: "08:00 AM"
@@ -149,6 +150,9 @@ fun setReminders(sharedPreferences: SharedPreferences, context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, ReminderReceiver::class.java)
 
+        // Trigger an immediate notification
+        triggerImmediateNotification(context)
+
         for (dayName in selectedDays) {
             val day = DayOfWeek.valueOf(dayName.uppercase())
 
@@ -156,7 +160,6 @@ fun setReminders(sharedPreferences: SharedPreferences, context: Context) {
                 when {
                     currentTime.isAfter(startTime) && currentTime.isBefore(endTime) -> {
                         // Current time within interval on a selected day
-                        triggerImmediateNotification(context)
                         scheduleForDay(
                             day,
                             currentTime.plusMinutes(frequencyMinutes.toLong()),
@@ -188,6 +191,70 @@ fun setReminders(sharedPreferences: SharedPreferences, context: Context) {
         Log.e("Reminder", "Error setting reminders: ${e.message}", e)
     }
 }
+
+//fun setReminders(sharedPreferences: SharedPreferences, context: Context) {
+//    val selectedDays = sharedPreferences.getStringSet("selected_days", emptySet()) ?: emptySet()
+//    val startTimeString = sharedPreferences.getString("start_time", "08:00 AM") ?: "08:00 AM"
+//    val endTimeString = sharedPreferences.getString("end_time", "06:00 PM") ?: "06:00 PM"
+//    val frequencyMinutes = sharedPreferences.getInt("frequency", 10)
+//
+//    // Get the device's time format
+//    val is24HourFormat = DateFormat.is24HourFormat(context)
+//    val formatter = if (is24HourFormat) {
+//        DateTimeFormatter.ofPattern("HH:mm")
+//    } else {
+//        DateTimeFormatter.ofPattern("h:mm a")
+//    }
+//
+//    try {
+//        val startTime = LocalTime.parse(startTimeString, formatter)
+//        val endTime = LocalTime.parse(endTimeString, formatter)
+//        val now = LocalDate.now()
+//        val currentDay = DayOfWeek.from(now)
+//        val currentTime = LocalTime.now()
+//        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val intent = Intent(context, ReminderReceiver::class.java)
+//
+//        for (dayName in selectedDays) {
+//            val day = DayOfWeek.valueOf(dayName.uppercase())
+//
+//            if (currentDay == day) {
+//                when {
+//                    currentTime.isAfter(startTime) && currentTime.isBefore(endTime) -> {
+//                        // Current time within interval on a selected day
+//                        triggerImmediateNotification(context)
+//                        scheduleForDay(
+//                            day,
+//                            currentTime.plusMinutes(frequencyMinutes.toLong()),
+//                            endTime,
+//                            frequencyMinutes,
+//                            alarmManager,
+//                            intent,
+//                            context
+//                        )
+//                    }
+//                    currentTime.isBefore(startTime) -> {
+//                        // Current time earlier than start time on a selected day
+//                        scheduleForDay(
+//                            day, startTime, endTime, frequencyMinutes, alarmManager, intent, context
+//                        )
+//                    }
+//                }
+//            } else {
+//                // Schedule for other selected days
+//                scheduleForDay(
+//                    day, startTime, endTime, frequencyMinutes, alarmManager, intent, context
+//                )
+//            }
+//        }
+//
+//        Toast.makeText(context, "Reminders have been configured for selected days.", Toast.LENGTH_SHORT).show()
+////        triggerfirstImmediateNotification(context)
+//    } catch (e: Exception) {
+//        Toast.makeText(context, "Invalid time format. Please check your inputs.", Toast.LENGTH_SHORT).show()
+//        Log.e("Reminder", "Error setting reminders: ${e.message}", e)
+//    }
+//}
 
 @SuppressLint("ScheduleExactAlarm")
 fun scheduleForDay(
@@ -250,6 +317,7 @@ fun triggerImmediateNotification(context: Context) {
     // Show the notification
     notificationManager.notify(System.currentTimeMillis().toInt(), notification)
 }
+
 
 // Helper function to get formatted time
 fun getFormattedTime(): String {

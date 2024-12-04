@@ -48,69 +48,54 @@ fun SelectDaysScreen(navController: NavController, context: Context) {
     val selectedDays = remember { mutableStateListOf<String>().apply { addAll(initialDays) } }
     var isEditing by remember { mutableStateOf(false) }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(if (androidx.compose.foundation.isSystemInDarkTheme()) BackgroundDark else BackgroundLight)
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .background(if (androidx.compose.foundation.isSystemInDarkTheme()) BackgroundDark else BackgroundLight),
+        contentAlignment = Alignment.Center
     ) {
-        daysOfWeek.chunked(2).forEach { row ->
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                row.forEach { day ->
-                    DayBox(
-                        day = day,
-                        isSelected = selectedDays.contains(day),
-                        isEditing = isEditing
-                    ) {
-                        if (isEditing) {
-                            if (selectedDays.contains(day)) {
-                                selectedDays.remove(day)
-                            } else {
-                                selectedDays.add(day)
-                            }
-                        } else {
-                            Toast.makeText(context, "Enable edit mode to select days", Toast.LENGTH_SHORT).show()
-                        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(12.dp)
+        ) {
+            // Circular layout for days
+            CircularDaySelector(
+                daysOfWeek = daysOfWeek,
+                selectedDays = selectedDays,
+                isEditing = isEditing
+            ) { day ->
+                if (isEditing) {
+                    if (selectedDays.contains(day)) {
+                        selectedDays.remove(day)
+                    } else {
+                        selectedDays.add(day)
                     }
+                } else {
+                    Toast.makeText(context, "Enable edit mode to select days", Toast.LENGTH_SHORT).show()
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
             Button(
                 onClick = {
                     if (isEditing) {
-                        // Clear and update shared preferences
                         sharedPreferences.edit()
                             .clear()
                             .putStringSet("selected_days", selectedDays.toSet())
                             .apply()
 
-                        // Log and UI feedback
                         Log.d("SharedPreferences", "Saved days: ${selectedDays.joinToString(", ")}")
                         Toast.makeText(context, "Saved days successfully!", Toast.LENGTH_SHORT).show()
 
-                        // Navigate back
                         navController.navigate("home_screen") {
                             popUpTo("frequency_picking_screen") { inclusive = true }
                         }
                     }
                     isEditing = !isEditing
                 },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxWidth(0.8f),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (androidx.compose.foundation.isSystemInDarkTheme()) ButtonDark else ButtonLight,
                     contentColor = if (androidx.compose.foundation.isSystemInDarkTheme()) TextDark else TextLight
@@ -123,25 +108,40 @@ fun SelectDaysScreen(navController: NavController, context: Context) {
 }
 
 @Composable
-fun DayBox(day: String, isSelected: Boolean, isEditing: Boolean, onClick: () -> Unit) {
-    val selectedColor = Color(0xFFACECA1)
-    Surface(
+fun CircularDaySelector(
+    daysOfWeek: List<String>,
+    selectedDays: List<String>,
+    isEditing: Boolean,
+    onDayClick: (String) -> Unit
+) {
+    Box(
         modifier = Modifier
-            .size(80.dp) // Increased size for better readability
-            .padding(3.dp)
-            .clickable(enabled = true, onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
-        color = if (isSelected) selectedColor else Color.LightGray
+            .size(180.dp) // Circle size for Wear OS
+            .background(Color.Transparent),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Text(
-                text = day,
-                color = if (isSelected) Color.Black else Color.White,
-                style = MaterialTheme.typography.bodyMedium
-            )
+        daysOfWeek.forEachIndexed { index, day ->
+            val angle = Math.toRadians((index * 360.0 / daysOfWeek.size) - 90)
+            val xOffset = 70.dp * Math.cos(angle).toFloat()
+            val yOffset = 70.dp * Math.sin(angle).toFloat()
+
+            Box(
+                modifier = Modifier
+                    .offset(x = xOffset, y = yOffset)
+                    .size(40.dp) // Smaller size for Wear OS
+                    .background(
+                        color = if (selectedDays.contains(day)) Color(0xFFACECA1) else Color.LightGray,
+                        shape = RoundedCornerShape(50)
+                    )
+                    .clickable(enabled = true) { onDayClick(day) },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = day.take(3), // Use abbreviations for better fit
+                    color = if (selectedDays.contains(day)) Color.Black else Color.White,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
         }
     }
 }

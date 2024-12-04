@@ -25,86 +25,92 @@ fun SelectEndTimeScreen(navController: NavController) {
     val context = LocalContext.current
     val isDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     val selectedEndTime = remember { mutableStateOf(LocalTime.now()) }
-    val showDialog = remember { mutableStateOf(false) } // Dialog visibility state
+    val showDialog = remember { mutableStateOf(false) }
 
-    Column(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
-            .background(MaterialTheme.colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Select End Time",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        val maxWidth = maxWidth
+        val isCompact = maxWidth < 600.dp // Detect small screens
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = selectedEndTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = { showDialog.value = true },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isDarkTheme) ButtonDark else ButtonLight,
-                contentColor = if (isDarkTheme) TextDark else TextLight
-            )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text("Pick Time")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                // Save the selected end time in SharedPreferences
-                val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-                sharedPreferences.edit()
-                    .putString("end_time", selectedEndTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
-                    .apply()
-
-                // Display Toast with the saved time
-                Toast.makeText(
-                    context,
-                    "End time saved: ${selectedEndTime.value.format(DateTimeFormatter.ofPattern("h:mm a"))}",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                // Navigate back to the home screen
-                navController.navigate("home_screen") {
-                    popUpTo("select_end_time_screen") { inclusive = true }
-                }
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isDarkTheme) ButtonLight else ButtonDark,
-                contentColor = if (isDarkTheme) TextDark else TextLight
+            Text(
+                text = "Select End Time",
+                style = if (isCompact) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onBackground
             )
-        ) {
-            Text("Save Time")
-        }
 
-        // Display the time picker dialog if it is triggered
-        if (showDialog.value) {
-            EndTimePickerDialog(
-                currentHour = selectedEndTime.value.hour,
-                currentMinute = selectedEndTime.value.minute,
-                currentAmPm = if (selectedEndTime.value.hour < 12) 0 else 1,
-                onTimeSelected = { hour, minute, amPm ->
-                    // Adjust the hour based on AM/PM
-                    val finalHour = if (amPm == 1) (hour % 12) + 12 else hour % 12
-                    selectedEndTime.value = LocalTime.of(finalHour, minute)
-                    showDialog.value = false
+            Spacer(modifier = Modifier.height(if (isCompact) 8.dp else 16.dp))
+
+            Text(
+                text = selectedEndTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")),
+                style = if (isCompact) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            Spacer(modifier = Modifier.height(if (isCompact) 8.dp else 16.dp))
+
+            Button(
+                onClick = { showDialog.value = true },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isDarkTheme) ButtonDark else ButtonLight,
+                    contentColor = if (isDarkTheme) TextDark else TextLight
+                ),
+                modifier = Modifier
+                    .width(if (isCompact) maxWidth * 0.8f else maxWidth * 0.6f)
+            ) {
+                Text("Pick Time")
+            }
+
+            Spacer(modifier = Modifier.height(if (isCompact) 8.dp else 16.dp))
+
+            Button(
+                onClick = {
+                    val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+                    sharedPreferences.edit()
+                        .putString("end_time", selectedEndTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
+                        .apply()
+
+                    Toast.makeText(
+                        context,
+                        "End time saved: ${selectedEndTime.value.format(DateTimeFormatter.ofPattern("h:mm a"))}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    navController.navigate("home_screen") {
+                        popUpTo("select_end_time_screen") { inclusive = true }
+                    }
                 },
-                onCancel = { showDialog.value = false }
-            )
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isDarkTheme) ButtonLight else ButtonDark,
+                    contentColor = if (isDarkTheme) TextDark else TextLight
+                ),
+                modifier = Modifier
+                    .width(if (isCompact) maxWidth * 0.8f else maxWidth * 0.6f)
+            ) {
+                Text("Save Time")
+            }
+
+            if (showDialog.value) {
+                EndTimePickerDialog(
+                    currentHour = selectedEndTime.value.hour,
+                    currentMinute = selectedEndTime.value.minute,
+                    currentAmPm = if (selectedEndTime.value.hour < 12) 0 else 1,
+                    onTimeSelected = { hour, minute, amPm ->
+                        val finalHour = if (amPm == 1) (hour % 12) + 12 else hour % 12
+                        selectedEndTime.value = LocalTime.of(finalHour, minute)
+                        showDialog.value = false
+                    },
+                    onCancel = { showDialog.value = false }
+                )
+            }
         }
     }
 }
