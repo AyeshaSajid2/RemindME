@@ -33,12 +33,12 @@ fun DetailScreen(navController: NavController) {
 
     // Fetch data from SharedPreferences
     val savedDays = sharedPreferences.getStringSet("selected_days", setOf())?.joinToString(", ") ?: "No days saved"
-    val startTime = sharedPreferences.getString("start_time", "00:00")
-    val endTime = sharedPreferences.getString("end_time", "00:00")
-    val startTime2 = sharedPreferences.getString("start_time_2", "00:00")
-    val endTime2 = sharedPreferences.getString("end_time_2", "00:00")
-    val startTime3 = sharedPreferences.getString("start_time_3", "00:00")
-    val endTime3 = sharedPreferences.getString("end_time_3", "00:00")
+    val startTime = sharedPreferences.getString("start_time", "08:00 AM")
+    val endTime = sharedPreferences.getString("end_time", "10:00 AM")
+    val startTime2 = sharedPreferences.getString("start_time_2", "12:00 PM")
+    val endTime2 = sharedPreferences.getString("end_time_2", "02:00 PM")
+    val startTime3 = sharedPreferences.getString("start_time_3", "04:00 PM")
+    val endTime3 = sharedPreferences.getString("end_time_3", "0:00 PM")
     val frequency = sharedPreferences.getInt("frequency", 10)
 
     val configuration = LocalConfiguration.current

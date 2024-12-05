@@ -94,15 +94,15 @@ fun HomeScreen(navController: NavHostController) {
                     navController.navigate("select_days")
                 }
                 // Button to navigate to Select Start Time screen
-                HomeButton("Set 1st Interval") {
+                HomeButton("Set Slot 1") {
                     navController.navigate("interval_one")
                 }
                 // Button to navigate to Select End Time screen
-                HomeButton("Set 2nd Interval") {
+                HomeButton("Set Slot 2") {
                     navController.navigate("interval_two")
                 }
 
-                HomeButton("Select 3rd Interval") {
+                HomeButton("Set Slot 3") {
                     navController.navigate("interval_three")
                 }
                 // Button to navigate to Select Frequency screen
