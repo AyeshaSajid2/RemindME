@@ -35,7 +35,11 @@ fun DetailScreen(navController: NavController) {
     // Fetch data from SharedPreferences
     val savedDays = sharedPreferences.getStringSet("selected_days", setOf())?.joinToString(", ") ?: "No days saved"
     val startTime = sharedPreferences.getString("start_time", "00:00")
-    val endTime = sharedPreferences.getString("end_time", "23:59")
+    val endTime = sharedPreferences.getString("end_time", "00:00")
+    val startTime2 = sharedPreferences.getString("start_time_2", "00:00")
+    val endTime2 = sharedPreferences.getString("end_time_2", "00:00")
+    val startTime3 = sharedPreferences.getString("start_time_3", "00:00")
+    val endTime3 = sharedPreferences.getString("end_time_3", "00:00")
     val frequency = sharedPreferences.getInt("frequency", 10)
 
     // UI
@@ -78,6 +82,27 @@ fun DetailScreen(navController: NavController) {
         ResponsiveDetailCard(
             title = "Frequency",
             value = "$frequency minutes",
+            isDarkTheme = isDarkTheme
+        )
+        ResponsiveDetailCard(
+            title = "Interval 2 start time",
+            value = startTime2.orEmpty(),
+            isDarkTheme = isDarkTheme
+        )
+        ResponsiveDetailCard(
+            title = "Interval 2 end time",
+            value = endTime2.orEmpty(),
+            isDarkTheme = isDarkTheme
+        )
+
+        ResponsiveDetailCard(
+            title = "Interval 3 start time",
+            value = startTime3.orEmpty(),
+            isDarkTheme = isDarkTheme
+        )
+        ResponsiveDetailCard(
+            title = "Interval 3 end time",
+            value = endTime3.orEmpty(),
             isDarkTheme = isDarkTheme
         )
 

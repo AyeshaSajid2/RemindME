@@ -1,3 +1,5 @@
+package com.example.remindme.presentation.MainScreens
+
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -24,7 +26,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun SelectEndTimeScreen(navController: NavController) {
+fun SelectEndTimeScreenSecond(navController: NavController) {
     val context = LocalContext.current
     val isDarkTheme = isSystemInDarkTheme()
     val selectedEndTime = remember { mutableStateOf(LocalTime.now()) }
@@ -73,7 +75,7 @@ fun SelectEndTimeScreen(navController: NavController) {
                 // Save the selected end time in SharedPreferences
                 val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
                 sharedPreferences.edit()
-                    .putString("end_time", selectedEndTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
+                    .putString("end_time_2", selectedEndTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
                     .apply()
 
                 // Display Toast with the saved time
@@ -228,5 +230,5 @@ fun EndTimeNumberPicker(
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true, showBackground = true)
 @Composable
 fun DefaultEndPreview() {
-    SelectEndTimeScreen(navController = NavController(LocalContext.current))
+    SelectEndTimeScreenSecond(navController = NavController(LocalContext.current))
 }

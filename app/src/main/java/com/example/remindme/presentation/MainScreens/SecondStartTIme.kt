@@ -24,7 +24,7 @@ import com.example.remindme.presentation.theme.TextLight
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-@Composable fun SelectStartTimeScreen(navController: NavController) {
+@Composable fun SelectStartTimeScreenSecond(navController: NavController) {
     val context = LocalContext.current
     val isDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     val selectedTime = remember { mutableStateOf(LocalTime.now()) }
@@ -102,7 +102,7 @@ import java.time.format.DateTimeFormatter
             }
 
             if (showDialog.value) {
-                CustomTimePickerDialog1(
+                CustomTimePickerDialog(
                     currentHour = selectedTime.value.hour,
                     currentMinute = selectedTime.value.minute,
                     currentAmPm = if (selectedTime.value.hour < 12) 0 else 1,
@@ -119,7 +119,7 @@ import java.time.format.DateTimeFormatter
 }
 
 @Composable
-fun CustomTimePickerDialog1(
+fun CustomTimePickerDialog(
     currentHour: Int,
     currentMinute: Int,
     currentAmPm: Int,
@@ -223,7 +223,7 @@ fun CustomTimePickerDialog1(
 
 
 @Composable
-fun NumberPicker1(
+fun NumberPicker(
     value: Int,
     range: IntRange,
     onValueChange: (Int) -> Unit,
@@ -247,6 +247,6 @@ fun NumberPicker1(
 
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
-fun DefaultPreview1() {
-    SelectStartTimeScreen(navController = NavController(LocalContext.current))
+fun DefaultPreview2() {
+    SelectStartTimeScreenSecond(navController = NavController(LocalContext.current))
 }

@@ -1,3 +1,6 @@
+package com.example.remindme.presentation.MainScreens
+
+
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -24,7 +27,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun SelectEndTimeScreen(navController: NavController) {
+fun SelectEndTimeScreenthree(navController: NavController) {
     val context = LocalContext.current
     val isDarkTheme = isSystemInDarkTheme()
     val selectedEndTime = remember { mutableStateOf(LocalTime.now()) }
@@ -73,7 +76,7 @@ fun SelectEndTimeScreen(navController: NavController) {
                 // Save the selected end time in SharedPreferences
                 val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
                 sharedPreferences.edit()
-                    .putString("end_time", selectedEndTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
+                    .putString("end_time_3", selectedEndTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
                     .apply()
 
                 // Display Toast with the saved time
@@ -85,7 +88,7 @@ fun SelectEndTimeScreen(navController: NavController) {
 
                 // Navigate back to the home screen
                 navController.navigate("home_screen") {
-                    popUpTo("select_end_time_screen") { inclusive = true }
+                    popUpTo("select_end_time_screen_three") { inclusive = true }
                 }
             },
             colors = ButtonDefaults.buttonColors(
@@ -98,7 +101,7 @@ fun SelectEndTimeScreen(navController: NavController) {
 
         // Display the time picker dialog if it is triggered
         if (showDialog.value) {
-            EndTimePickerDialog(
+            EndTimePickerDialog3(
                 currentHour = selectedEndTime.value.hour,
                 currentMinute = selectedEndTime.value.minute,
                 currentAmPm = if (selectedEndTime.value.hour < 12) 0 else 1,
@@ -115,7 +118,7 @@ fun SelectEndTimeScreen(navController: NavController) {
 }
 
 @Composable
-fun EndTimePickerDialog(
+fun EndTimePickerDialog3(
     currentHour: Int,
     currentMinute: Int,
     currentAmPm: Int,
@@ -203,7 +206,7 @@ fun EndTimePickerDialog(
 }
 
 @Composable
-fun EndTimeNumberPicker(
+fun EndTimeNumberPicker3(
     value: Int,
     range: IntRange,
     onValueChange: (Int) -> Unit,
@@ -227,6 +230,6 @@ fun EndTimeNumberPicker(
 
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true, showBackground = true)
 @Composable
-fun DefaultEndPreview() {
-    SelectEndTimeScreen(navController = NavController(LocalContext.current))
+fun DefaultEndPreview3() {
+    SelectEndTimeScreenthree(navController = NavController(LocalContext.current))
 }

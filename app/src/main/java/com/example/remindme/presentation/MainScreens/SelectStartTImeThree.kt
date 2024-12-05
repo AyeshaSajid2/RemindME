@@ -24,7 +24,7 @@ import com.example.remindme.presentation.theme.TextLight
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-@Composable fun SelectStartTimeScreen(navController: NavController) {
+@Composable fun SelectStartTimeScreenthree(navController: NavController) {
     val context = LocalContext.current
     val isDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     val selectedTime = remember { mutableStateOf(LocalTime.now()) }
@@ -78,7 +78,7 @@ import java.time.format.DateTimeFormatter
                 onClick = {
                     val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
                     sharedPreferences.edit()
-                        .putString("start_time_2", selectedTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
+                        .putString("start_time_3", selectedTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
                         .apply()
 
                     Toast.makeText(
@@ -87,8 +87,8 @@ import java.time.format.DateTimeFormatter
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    navController.navigate("interval_two") {
-                        popUpTo("select_start_time_screen_2") { inclusive = true }
+                    navController.navigate("interval_three") {
+                        popUpTo("select_start_time_screen_3") { inclusive = true }
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -102,7 +102,7 @@ import java.time.format.DateTimeFormatter
             }
 
             if (showDialog.value) {
-                CustomTimePickerDialog1(
+                CustomTimePickerDialog3(
                     currentHour = selectedTime.value.hour,
                     currentMinute = selectedTime.value.minute,
                     currentAmPm = if (selectedTime.value.hour < 12) 0 else 1,
@@ -119,7 +119,7 @@ import java.time.format.DateTimeFormatter
 }
 
 @Composable
-fun CustomTimePickerDialog1(
+fun CustomTimePickerDialog3(
     currentHour: Int,
     currentMinute: Int,
     currentAmPm: Int,
@@ -223,7 +223,7 @@ fun CustomTimePickerDialog1(
 
 
 @Composable
-fun NumberPicker1(
+fun NumberPicker3(
     value: Int,
     range: IntRange,
     onValueChange: (Int) -> Unit,
@@ -247,6 +247,6 @@ fun NumberPicker1(
 
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
 @Composable
-fun DefaultPreview1() {
-    SelectStartTimeScreen(navController = NavController(LocalContext.current))
+fun DefaultPreview3() {
+    SelectStartTimeScreenthree(navController = NavController(LocalContext.current))
 }

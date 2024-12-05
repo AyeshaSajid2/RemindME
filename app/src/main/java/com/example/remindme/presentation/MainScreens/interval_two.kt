@@ -33,17 +33,11 @@ import androidx.annotation.RequiresApi
 
 import androidx.activity.compose.BackHandler
 import com.example.remindme.presentation.widgets.HomeButton
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
-fun getFormattedTime(): String {
-    val formatter = DateTimeFormatter.ofPattern("hh:mm:ss a")
-    return LocalTime.now().format(formatter)
-}
 @RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun IntervalTwo(navController: NavHostController) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
 
@@ -61,10 +55,10 @@ fun HomeScreen(navController: NavHostController) {
     }
 
     // Handle back press to close the app
-    BackHandler {
-        // This will close the app when back is pressed
-        (context as? android.app.Activity)?.finish()
-    }
+//    BackHandler {
+//        // This will close the app when back is pressed
+//        (context as? android.app.Activity)?.finish()
+//    }
 
     // Scaffold to hold the content
     Scaffold {
@@ -89,42 +83,17 @@ fun HomeScreen(navController: NavHostController) {
                     modifier = Modifier.padding(vertical = 2.dp)
                 )
 
-                // Button to navigate to Select Days screen
-                HomeButton("Select Days") {
-                    navController.navigate("select_days")
-                }
                 // Button to navigate to Select Start Time screen
-                HomeButton("Set 1st Interval") {
-                    navController.navigate("interval_one")
+                HomeButton("Select Start Time") {
+                    navController.navigate("select_start_time_2")
                 }
                 // Button to navigate to Select End Time screen
-                HomeButton("Set 2nd Interval") {
-                    navController.navigate("interval_two")
+                HomeButton("Select End Time") {
+                    navController.navigate("select_end_time_2")
                 }
-
-                HomeButton("Select 3rd Interval") {
-                    navController.navigate("interval_three")
-                }
-                // Button to navigate to Select Frequency screen
-                HomeButton("Select Frequency") {
-                    navController.navigate("select_frequency")
-                }
-                // Button to navigate to Show Details screen
-                HomeButton("Show Details") {
-                    navController.navigate("show_details")
-                }
-                // Button to set reminders
-                HomeButton("Set Reminder") {
-                    setReminders(sharedPreferences, context)
-                }
-
-
-                // Button to view scheduled alarms
             }
         }
     }
-    // Helper function to get formatted time
-
 }
 
 
