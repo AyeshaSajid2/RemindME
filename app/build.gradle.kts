@@ -71,6 +71,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation ("androidx.compose.material:material-icons-core-android:1.7.5")
     implementation("androidx.navigation:navigation-runtime-ktx:2.8.4")
+    implementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")

@@ -54,6 +54,13 @@ fun IntervalTwo(navController: NavHostController) {
         }
     }
 
+    BackHandler {
+        navController.navigate("home_screen") {
+            // Optionally, you can specify that this screen should be removed from the back stack
+            popUpTo("select_start_time_screen_2") { inclusive = true }
+        }
+    }
+
     // Handle back press to close the app
 //    BackHandler {
 //        // This will close the app when back is pressed

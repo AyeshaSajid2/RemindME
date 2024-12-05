@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +25,8 @@ import com.example.remindme.presentation.theme.TextLight
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-@Composable fun SelectStartTimeScreenSecond(navController: NavController) {
+@Composable
+fun SelectStartTimeScreenSecond(navController: NavController) {
     val context = LocalContext.current
     val isDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     val selectedTime = remember { mutableStateOf(LocalTime.now()) }
@@ -38,6 +40,10 @@ import java.time.format.DateTimeFormatter
     ) {
         val maxWidth = maxWidth
         val isCompact = maxWidth < 600.dp // Adjust UI for small screens
+        val isRound = maxWidth == maxHeight // Determine if the screen is circular
+
+        // Make the screen responsive based on shape
+        val containerShape = if (isRound) MaterialTheme.shapes.small else MaterialTheme.shapes.medium
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -68,6 +74,8 @@ import java.time.format.DateTimeFormatter
                 ),
                 modifier = Modifier
                     .width(if (isCompact) maxWidth * 0.8f else maxWidth * 0.6f)
+                    .height(if (isCompact) 50.dp else 60.dp) // Adjust button size for compact screens
+                    .clip(containerShape) // Make the button shape adaptive
             ) {
                 Text("Pick Time")
             }
@@ -97,12 +105,14 @@ import java.time.format.DateTimeFormatter
                 ),
                 modifier = Modifier
                     .width(if (isCompact) maxWidth * 0.8f else maxWidth * 0.6f)
+                    .height(if (isCompact) 50.dp else 60.dp) // Adjust button size for compact screens
+                    .clip(containerShape) // Make the button shape adaptive
             ) {
                 Text("Save Time")
             }
 
             if (showDialog.value) {
-                CustomTimePickerDialog(
+                CustomTimePickerDialog1(
                     currentHour = selectedTime.value.hour,
                     currentMinute = selectedTime.value.minute,
                     currentAmPm = if (selectedTime.value.hour < 12) 0 else 1,
@@ -111,7 +121,8 @@ import java.time.format.DateTimeFormatter
                         selectedTime.value = LocalTime.of(finalHour, minute)
                         showDialog.value = false
                     },
-                    onCancel = { showDialog.value = false }
+                    onCancel = { showDialog.value = false },
+                    isRound = isRound // Pass the screen shape to the dialog
                 )
             }
         }

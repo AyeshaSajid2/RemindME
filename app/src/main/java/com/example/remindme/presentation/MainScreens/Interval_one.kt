@@ -45,6 +45,12 @@ fun IntervalOne(navController: NavHostController) {
     var currentTime by remember { mutableStateOf(getFormattedTime()) }
     var currentTimeMillis by remember { mutableStateOf(System.currentTimeMillis()) }
 
+    BackHandler {
+        navController.navigate("home_screen") {
+            // Optionally, you can specify that this screen should be removed from the back stack
+            popUpTo("select_start_time_screen_1") { inclusive = true }
+        }
+    }
     // Update time every second
     LaunchedEffect(Unit) {
         while (true) {

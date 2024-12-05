@@ -1,5 +1,6 @@
     package com.example.remindme.presentation
 
+    import DetailScreen
     import IntervalPickerScreen
     import SelectEndTimeScreen
 
@@ -16,7 +17,7 @@
     import androidx.navigation.compose.NavHost
     import androidx.navigation.compose.composable
     import androidx.navigation.compose.rememberNavController
-    import com.example.remindme.presentation.MainScreens.DetailScreen
+//    import com.example.remindme.presentation.MainScreens.DetailScreen
     import com.example.remindme.presentation.MainScreens.FrequencyPickingScreen
     import com.example.remindme.presentation.MainScreens.HomeScreen
     import com.example.remindme.presentation.MainScreens.IntervalOne

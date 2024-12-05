@@ -59,7 +59,7 @@ class ReminderReceiver : BroadcastReceiver() {
             val notification = NotificationCompat.Builder(context, "reminder_channel")
                 .setContentTitle("Reminder")
                 .setContentText(randomMessage)
-                .setSmallIcon(R.drawable.splash_icon)
+                .setSmallIcon(R.drawable.cerevia)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent) // Set the pending intent for click action

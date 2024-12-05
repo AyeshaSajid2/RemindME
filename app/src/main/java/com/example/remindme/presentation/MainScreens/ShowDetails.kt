@@ -1,8 +1,5 @@
-package com.example.remindme.presentation.MainScreens
-
 import android.content.Context
 import android.content.SharedPreferences
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,11 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.TextUnit
 import androidx.navigation.NavController
 import com.example.remindme.presentation.theme.ButtonDark
 import com.example.remindme.presentation.theme.ButtonLight
@@ -42,6 +41,14 @@ fun DetailScreen(navController: NavController) {
     val endTime3 = sharedPreferences.getString("end_time_3", "00:00")
     val frequency = sharedPreferences.getInt("frequency", 10)
 
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+    val fontSize = when {
+        screenWidth < 350.dp -> 14.sp // Smaller font for smaller screens
+        screenWidth < 450.dp -> 16.sp // Medium font for medium screens
+        else -> 18.sp // Larger font for bigger screens
+    }
+
     // UI
     Column(
         modifier = Modifier
@@ -55,7 +62,7 @@ fun DetailScreen(navController: NavController) {
         Text(
             text = "Details",
             style = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 24.sp,
+                fontSize = fontSize,
                 fontWeight = FontWeight.Bold
             ),
             color = MaterialTheme.colorScheme.onBackground
@@ -67,43 +74,51 @@ fun DetailScreen(navController: NavController) {
         ResponsiveDetailCard(
             title = "Selected Days",
             value = savedDays,
-            isDarkTheme = isDarkTheme
+            isDarkTheme = isDarkTheme,
+            fontSize = fontSize
         )
         ResponsiveDetailCard(
             title = "Start Time",
             value = startTime.orEmpty(),
-            isDarkTheme = isDarkTheme
+            isDarkTheme = isDarkTheme,
+            fontSize = fontSize
         )
         ResponsiveDetailCard(
             title = "End Time",
             value = endTime.orEmpty(),
-            isDarkTheme = isDarkTheme
+            isDarkTheme = isDarkTheme,
+            fontSize = fontSize
         )
         ResponsiveDetailCard(
             title = "Frequency",
             value = "$frequency minutes",
-            isDarkTheme = isDarkTheme
+            isDarkTheme = isDarkTheme,
+            fontSize = fontSize
         )
         ResponsiveDetailCard(
             title = "Interval 2 start time",
             value = startTime2.orEmpty(),
-            isDarkTheme = isDarkTheme
+            isDarkTheme = isDarkTheme,
+            fontSize = fontSize
         )
         ResponsiveDetailCard(
             title = "Interval 2 end time",
             value = endTime2.orEmpty(),
-            isDarkTheme = isDarkTheme
+            isDarkTheme = isDarkTheme,
+            fontSize = fontSize
         )
 
         ResponsiveDetailCard(
             title = "Interval 3 start time",
             value = startTime3.orEmpty(),
-            isDarkTheme = isDarkTheme
+            isDarkTheme = isDarkTheme,
+            fontSize = fontSize
         )
         ResponsiveDetailCard(
             title = "Interval 3 end time",
             value = endTime3.orEmpty(),
-            isDarkTheme = isDarkTheme
+            isDarkTheme = isDarkTheme,
+            fontSize = fontSize
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -124,7 +139,7 @@ fun DetailScreen(navController: NavController) {
 }
 
 @Composable
-fun ResponsiveDetailCard(title: String, value: String, isDarkTheme: Boolean) {
+fun ResponsiveDetailCard(title: String, value: String, isDarkTheme: Boolean, fontSize: TextUnit) {
     val isScrollable = value.length > 30 // Adjust threshold for scrollable content
 
     Card(
@@ -146,7 +161,8 @@ fun ResponsiveDetailCard(title: String, value: String, isDarkTheme: Boolean) {
                 text = title,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = fontSize
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -161,7 +177,8 @@ fun ResponsiveDetailCard(title: String, value: String, isDarkTheme: Boolean) {
                         text = value,
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Normal,
-                            color = MaterialTheme.colorScheme.onPrimary
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontSize = fontSize
                         )
                     )
                 }
@@ -170,7 +187,8 @@ fun ResponsiveDetailCard(title: String, value: String, isDarkTheme: Boolean) {
                     text = value,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = fontSize
                     )
                 )
             }

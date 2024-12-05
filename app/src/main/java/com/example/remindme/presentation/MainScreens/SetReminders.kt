@@ -205,8 +205,8 @@ fun scheduleForDay(
 fun triggerImmediateNotification(context: Context) {
     val notificationManager = NotificationManagerCompat.from(context)
     val notification = NotificationCompat.Builder(context, "reminder_channel")
-        .setContentText("Reminder setup complete. Alarms scheduled!")
-        .setSmallIcon(R.drawable.splash_icon)
+        .setContentText("Let's start building your brighter day, one thought at a time!")
+        .setSmallIcon(R.drawable.cerevia)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .build()
 

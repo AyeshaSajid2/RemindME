@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RemindMe"
+rootProject.name = "Cereva"
 include(":app")
  

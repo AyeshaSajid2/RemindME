@@ -10,10 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
@@ -24,7 +28,8 @@ import com.example.remindme.presentation.theme.TextLight
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-@Composable fun SelectStartTimeScreen(navController: NavController) {
+@Composable
+fun SelectStartTimeScreen(navController: NavController) {
     val context = LocalContext.current
     val isDarkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     val selectedTime = remember { mutableStateOf(LocalTime.now()) }
@@ -38,6 +43,10 @@ import java.time.format.DateTimeFormatter
     ) {
         val maxWidth = maxWidth
         val isCompact = maxWidth < 600.dp // Adjust UI for small screens
+        val isRound = maxWidth == maxHeight // Determine if the screen is circular
+
+        // Make the screen responsive based on shape
+        val containerShape = if (isRound) MaterialTheme.shapes.small else MaterialTheme.shapes.medium
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -68,6 +77,8 @@ import java.time.format.DateTimeFormatter
                 ),
                 modifier = Modifier
                     .width(if (isCompact) maxWidth * 0.8f else maxWidth * 0.6f)
+                    .height(if (isCompact) 50.dp else 60.dp) // Adjust button size for compact screens
+                    .clip(containerShape) // Make the button shape adaptive
             ) {
                 Text("Pick Time")
             }
@@ -78,7 +89,7 @@ import java.time.format.DateTimeFormatter
                 onClick = {
                     val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
                     sharedPreferences.edit()
-                        .putString("start_time_2", selectedTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
+                        .putString("start_time", selectedTime.value.format(DateTimeFormatter.ofPattern("hh:mm a")))
                         .apply()
 
                     Toast.makeText(
@@ -87,8 +98,8 @@ import java.time.format.DateTimeFormatter
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    navController.navigate("interval_two") {
-                        popUpTo("select_start_time_screen_2") { inclusive = true }
+                    navController.navigate("interval_one") {
+                        popUpTo("select_start_time_screen_") { inclusive = true }
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -97,6 +108,8 @@ import java.time.format.DateTimeFormatter
                 ),
                 modifier = Modifier
                     .width(if (isCompact) maxWidth * 0.8f else maxWidth * 0.6f)
+                    .height(if (isCompact) 50.dp else 60.dp) // Adjust button size for compact screens
+                    .clip(containerShape) // Make the button shape adaptive
             ) {
                 Text("Save Time")
             }
@@ -111,7 +124,8 @@ import java.time.format.DateTimeFormatter
                         selectedTime.value = LocalTime.of(finalHour, minute)
                         showDialog.value = false
                     },
-                    onCancel = { showDialog.value = false }
+                    onCancel = { showDialog.value = false },
+                    isRound = isRound // Pass the screen shape to the dialog
                 )
             }
         }
@@ -124,20 +138,24 @@ fun CustomTimePickerDialog1(
     currentMinute: Int,
     currentAmPm: Int,
     onTimeSelected: (Int, Int, Int) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    isRound: Boolean // Determine if the screen is round
 ) {
     Dialog(onDismissRequest = { onCancel() }) {
         BoxWithConstraints {
             val maxHeight = maxHeight
             val isCompact = maxHeight < 200.dp // Adjust layout for smaller screens
 
+            // Make the time picker dialog adaptive to screen shape
+            val shape = if (isRound) MaterialTheme.shapes.small else MaterialTheme.shapes.medium
+
             Surface(
-                shape = MaterialTheme.shapes.medium,
+                shape = shape,
                 tonalElevation = 6.dp,
                 color = MaterialTheme.colorScheme.surface,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp)
+                    .padding(horizontal = 2.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -185,11 +203,11 @@ fun CustomTimePickerDialog1(
                         )
                     }
 
-//                    Spacer(modifier = Modifier.height(4.dp))
-
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp), // Optional: add padding if needed
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Button(
                             onClick = { onCancel() },
@@ -197,11 +215,18 @@ fun CustomTimePickerDialog1(
                                 containerColor = ButtonDark,
                                 contentColor = TextDark
                             ),
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier
+                                .weight(1f)  // Ensure both buttons take equal space
+                                .height(48.dp)  // Optional: You can set a fixed height for consistency
                         ) {
-                            Text("Cancel")
+                            Text("Cancel",
+                                style = TextStyle(fontSize = 6.sp)
+                            )
+
                         }
-                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Spacer(modifier = Modifier.width(8.dp))  // Optional: add more space between buttons
+
                         Button(
                             onClick = {
                                 onTimeSelected(selectedHour, selectedMinute, selectedAmPm)
@@ -210,42 +235,24 @@ fun CustomTimePickerDialog1(
                                 containerColor = ButtonLight,
                                 contentColor = TextDark
                             ),
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier
+                                .weight(1f)  // Ensure both buttons take equal space
+                                .height(48.dp)  // Optional: You can set a fixed height for consistency
                         ) {
-                            Text("OK")
+                            Text("OK",
+                                style = TextStyle(fontSize = 10.sp)
+                                )
                         }
                     }
+
                 }
             }
         }
     }
 }
 
-
-@Composable
-fun NumberPicker1(
-    value: Int,
-    range: IntRange,
-    onValueChange: (Int) -> Unit,
-    labels: List<String>? = null
-) {
-    AndroidView(
-        factory = { context ->
-            android.widget.NumberPicker(context).apply {
-                minValue = range.first
-                maxValue = range.last
-                wrapSelectorWheel = true
-                setOnValueChangedListener { _, _, newValue -> onValueChange(newValue) }
-            }
-        },
-        update = { picker ->
-            picker.value = value
-            labels?.let { picker.displayedValues = it.toTypedArray() }
-        }
-    )
-}
-
-@Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
+// Preview for wearables
+@Preview(device = Devices.WEAR_OS_SQUARE, showSystemUi = true)
 @Composable
 fun DefaultPreview1() {
     SelectStartTimeScreen(navController = NavController(LocalContext.current))

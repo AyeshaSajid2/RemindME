@@ -77,12 +77,7 @@
             android:taskAffinity="">
             <!-- You can add other properties here if needed -->
         </activity>
-        <activity android:name=".presentation.MainScreens.IntervalPickerActivity"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
-            android:taskAffinity="">
-            <!-- You can add other properties here if needed -->
-        </activity>
+
     </application>
 
 </manifest>
