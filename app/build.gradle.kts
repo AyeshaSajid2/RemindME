@@ -76,4 +76,9 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    ///in App purchase
+        val billing_version = "7.1.1"
+        implementation("com.android.billingclient:billing:$billing_version")
+
 }

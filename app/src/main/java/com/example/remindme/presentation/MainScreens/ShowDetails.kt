@@ -96,26 +96,26 @@ fun DetailScreen(navController: NavController) {
             fontSize = fontSize
         )
         ResponsiveDetailCard(
-            title = "Interval 2 start time",
+            title = "slot 2 start time",
             value = startTime2.orEmpty(),
             isDarkTheme = isDarkTheme,
             fontSize = fontSize
         )
         ResponsiveDetailCard(
-            title = "Interval 2 end time",
+            title = "slot 2 end time",
             value = endTime2.orEmpty(),
             isDarkTheme = isDarkTheme,
             fontSize = fontSize
         )
 
         ResponsiveDetailCard(
-            title = "Interval 3 start time",
+            title = " slot 3 start time",
             value = startTime3.orEmpty(),
             isDarkTheme = isDarkTheme,
             fontSize = fontSize
         )
         ResponsiveDetailCard(
-            title = "Interval 3 end time",
+            title = "slot 3 end time",
             value = endTime3.orEmpty(),
             isDarkTheme = isDarkTheme,
             fontSize = fontSize
